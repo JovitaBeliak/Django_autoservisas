@@ -1,0 +1,1 @@
+Čia yra mokomasis autoserviso projektas su Django framework'u.
