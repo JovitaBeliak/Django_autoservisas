@@ -3,32 +3,32 @@ from django.db import models
 # Create your models here.
 class Service(models.Model):
     name = models.CharField()
-    price = models.FloatField()
+    price = models.DecimalField(decimal_places=2, max_digits=10)
 
     def __str__(self):
         return self.name
 
 class Car(models.Model):
     make = models.CharField()
-    model = models.FloatField()
+    model = models.CharField()
     license_plate = models.CharField()
     vin_code = models.CharField(max_length=17)
     client_name = models.CharField()
 
     def __str__(self):
-        return (f"{self.make} {self.model} {self.license_plate}")
+        return (f"{self.make} {self.model}")
 
 class Order(models.Model):
-    date = models.DateField()
-    car_id = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+    car = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.id} {self.date}"
+        return f"{self.car} {self.date}"
 
-class Order_line(models.Model):
-    order_id = models.ForeignKey(to="Order", on_delete=models.SET_NULL, null=True, blank=True)
-    service_id = models.ForeignKey(to="Service", on_delete=models.SET_NULL, null=True, blank=True)
+class OrderLine(models.Model):
+    order = models.ForeignKey(to="Order", on_delete=models.CASCADE)
+    service = models.ForeignKey(to="Service", on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.IntegerField()
 
     def __str__(self):
-        return f"{self.order_id} {self.service_id} {self.quantity}"
+        return f"{self.service.name} ({self.service.price}) - {self.quantity}"
