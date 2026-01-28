@@ -5,6 +5,10 @@ class Service(models.Model):
     name = models.CharField()
     price = models.DecimalField(decimal_places=2, max_digits=10)
 
+    class Meta:
+        verbose_name = "Servisas"
+        verbose_name_plural = "Servisai"
+
     def __str__(self):
         return self.name
 
@@ -15,6 +19,10 @@ class Car(models.Model):
     vin_code = models.CharField(max_length=17)
     client_name = models.CharField()
 
+    class Meta:
+        verbose_name = "Automobilis"
+        verbose_name_plural = "Automobiliai"
+
     def __str__(self):
         return (f"{self.make} {self.model}")
 
@@ -22,13 +30,25 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     car = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
 
+    class Meta:
+        verbose_name = "Užsakymas"
+        verbose_name_plural = "Užsakymai"
+
     def __str__(self):
         return f"{self.car} {self.date}"
 
 class OrderLine(models.Model):
     order = models.ForeignKey(to="Order", on_delete=models.CASCADE)
-    service = models.ForeignKey(to="Service", on_delete=models.SET_NULL, null=True, blank=True)
+    service = models.ForeignKey(to="Service",
+                                on_delete=models.SET_NULL,
+                                null=True, blank=True)
     quantity = models.IntegerField()
+
+
+
+    class Meta:
+        verbose_name = "Užsakymo eilutė"
+        verbose_name_plural = "Užsakymo eilutė"
 
     def __str__(self):
         return f"{self.service.name} ({self.service.price}) - {self.quantity}"
