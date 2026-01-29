@@ -5,12 +5,18 @@ class OrderLineInline(admin.TabularInline):
     model = OrderLine
     can_delete = False
     extra = 0
+    fields = ["service", "quantity", "line_sum"]
+    readonly_fields = ["line_sum"]
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["car", "date"]
+    list_display = ["car", "date", "total"]
+    list_filter = ["car", "date"]
     inlines = [OrderLineInline]
+    readonly_fields = ["date", "total"]
 
-
+    fieldsets = [
+        ("General", {"fields": ["car", "date", "total"]})
+    ]
 
 class CarAdmin(admin.ModelAdmin):
     list_display = ["make", "model", "client_name", "license_plate", "vin_code"]
@@ -21,11 +27,10 @@ class CarAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ["name", "price"]
 
-class OrderLineAdmin(admin.ModelAdmin):
-    list_display = ["service"]
+
 
 # Register your models here.
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Car, CarAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderLine, OrderLineAdmin)
+admin.site.register(OrderLine)

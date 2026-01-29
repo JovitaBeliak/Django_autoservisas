@@ -30,25 +30,32 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     car = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
 
+    def total(self):
+        result = 0
+        for line in self.lines.all():
+            result += line.line_sum()
+        return result
+
     class Meta:
         verbose_name = "Užsakymas"
         verbose_name_plural = "Užsakymai"
 
     def __str__(self):
-        return f"{self.car} {self.date}"
+        return f"{self.car} {self.date} - {self.total()}"
 
 class OrderLine(models.Model):
-    order = models.ForeignKey(to="Order", on_delete=models.CASCADE)
+    order = models.ForeignKey(to="Order", on_delete=models.CASCADE, related_name="lines")
     service = models.ForeignKey(to="Service",
                                 on_delete=models.SET_NULL,
                                 null=True, blank=True)
     quantity = models.IntegerField()
 
-
+    def line_sum(self):
+        return self.service.price * self.quantity
 
     class Meta:
         verbose_name = "Užsakymo eilutė"
         verbose_name_plural = "Užsakymo eilutė"
 
     def __str__(self):
-        return f"{self.service.name} ({self.service.price}) - {self.quantity}"
+        return f"{self.service.name} ({self.service.price}) * {self.quantity} = {self.line_sum()}"
