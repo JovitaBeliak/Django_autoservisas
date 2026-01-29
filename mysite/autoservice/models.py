@@ -30,6 +30,15 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     car = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
 
+    LOAN_STATUS = (
+        ('p', 'Priimtas'),
+        ('v', 'Vykdomas'),
+        ('t', 'Testuojama'),
+        ('u', 'Užbaigtas'),
+        ('a', 'Atšauktas')
+    )
+    status = models.CharField(max_length=1, choices=LOAN_STATUS, default='p')
+
     def total(self):
         result = 0
         for line in self.lines.all():
