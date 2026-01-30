@@ -6,8 +6,8 @@ class Service(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=10)
 
     class Meta:
-        verbose_name = "Servisas"
-        verbose_name_plural = "Servisai"
+        verbose_name = "Paslauga"
+        verbose_name_plural = "Paslaugos"
 
     def __str__(self):
         return self.name
