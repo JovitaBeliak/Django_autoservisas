@@ -18,6 +18,7 @@ class Car(models.Model):
     license_plate = models.CharField()
     vin_code = models.CharField(max_length=17)
     client_name = models.CharField()
+    cover = models.ImageField(upload_to='covers', null=True, blank=True)
 
     class Meta:
         verbose_name = "Automobilis"

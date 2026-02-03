@@ -3,6 +3,9 @@
 {% block title %}Automobilis{% endblock %}
 
 {% block content %}
+{% if car.cover %}
+<img src="{{ car.cover.url }}" class="card-img-top mb-3 rounded" style="max-width: 50%" alt="...">
+{% endif %}
 <p>Savininkas: {{ car.client_name }}</p>
 <p>Automobilis: {{ car.make }} {{ car.model }}</p>
 <p>Valstybinis Nr.: {{ car.license_plate }}</p>
