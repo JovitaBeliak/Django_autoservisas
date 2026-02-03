@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Automobilis{% endblock %}
+
+{% block content %}
+<p>Savininkas: {{ car.client_name }}</p>
+<p>Automobilis: {{ car.make }} {{ car.model }}</p>
+<p>Valstybinis Nr.: {{ car.license_plate }}</p>
+<p>VIN kodas: {{ car.vin_code }}</p>
+<h3>Taisymai:</h3>
+{% for order in car.orders.all %}
+<p><a href="{% url 'order' order.pk %}">{{ order.date }}</a></p>
+{% endfor %}
+{% endblock %}

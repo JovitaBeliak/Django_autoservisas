@@ -28,16 +28,17 @@ class Car(models.Model):
 
 class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    car = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
+    car = models.ForeignKey(to="Car", on_delete=models.SET_NULL,
+                            null=True, blank=True, related_name='orders')
 
-    LOAN_STATUS = (
+    STATUS = (
         ('p', 'Priimtas'),
         ('v', 'Vykdomas'),
         ('t', 'Testuojama'),
         ('u', 'Užbaigtas'),
         ('a', 'Atšauktas')
     )
-    status = models.CharField(max_length=1, choices=LOAN_STATUS, default='p')
+    status = models.CharField(choices=STATUS, default='p')
 
     def total(self):
         result = 0
