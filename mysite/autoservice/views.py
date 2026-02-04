@@ -7,10 +7,13 @@ from django.db.models import Q
 
 
 def index(request):
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
     context = {
         "num_service": Service.objects.count(),
         "num_order": Order.objects.filter(status='u').count(),
         "num_car": Car.objects.count(),
+        "num_visits": num_visits,
     }
 
     return render(request, template_name='index.html', context=context)
