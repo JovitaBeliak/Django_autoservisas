@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Mano taisymai{% endblock %}
+
+{% block content %}
+<h1>Mano taisymai/paslaugos:</h1>
+{% for myorder in myorders %}
+<p>{{ myorder }}</p>
+<p>Užsakymo statusas: {{ myorder.get_status_display }}</p>
+<p class="{% if myorder.is_overdue %}text-danger{% endif %}">Terminas: {{ myorder.due_date }}</p>
+{% endfor %}
+{% endblock %}

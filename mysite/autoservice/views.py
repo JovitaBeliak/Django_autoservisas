@@ -1,9 +1,9 @@
 from django.shortcuts import render
-
 from .models import Service, Order, Car
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def index(request):
@@ -35,11 +35,13 @@ def car(request, car_id):
     }
     return render(request, template_name='car.html', context=context)
 
+
 class OrderListView(generic.ListView):
     model = Order
     template_name = 'orders.html'
     context_object_name = 'orders'
     paginate_by = 2
+
 
 class OrderDetailView(generic.DetailView):
     model = Order
@@ -57,3 +59,13 @@ def search(request):
                                    Q(vin_code__icontains=query)),
     }
     return render(request, template_name='search.html', context=context)
+
+
+class MyOrdersListView(LoginRequiredMixin, generic.ListView):
+    model = Order
+    template_name = 'my_orders.html'
+    context_object_name = 'myorders'
+
+    def get_queryset(self):
+        return Order.objects.filter(client=self.request.user)
+
