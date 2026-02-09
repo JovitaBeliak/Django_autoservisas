@@ -32,4 +32,20 @@
     </tr>
     </tbody>
 </table>
+<h3>Komentarai</h3>
+{% if user.is_authenticated %}
+<form method="post" class="mb-2">
+    {% csrf_token %}
+    {% load crispy_forms_tags %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-primary">Paskelbti</button>
+</form>
+{% endif %}
+{% for review in order.reviews.all %}
+<p><strong>{{ review.reviewer }}</strong>, <em>{{ review.date_created }}</em></p>
+<p>{{ review.content }}</p>
+<hr>
+{% empty%}
+<p>Komentaru nera</p>
+{% endfor %}
 {% endblock %}

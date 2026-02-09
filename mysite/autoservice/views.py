@@ -1,9 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
+from django.views.generic.edit import FormMixin
+from .forms import OrderReviewForm
 from .models import Service, Order, Car
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+
 
 
 def index(request):
@@ -43,11 +48,28 @@ class OrderListView(generic.ListView):
     paginate_by = 2
 
 
-class OrderDetailView(generic.DetailView):
+class OrderDetailView(FormMixin, generic.DetailView):
     model = Order
     template_name = 'order.html'
     context_object_name = 'order'
+    form_class = OrderReviewForm
 
+    def get_success_url(self):
+        return reverse('order', kwargs={"pk": self.object.id})
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.order = self.get_object()
+        form.instance.reviewer = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 def search(request):
     query = request.GET.get('query')
@@ -69,3 +91,7 @@ class MyOrdersListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Order.objects.filter(client=self.request.user)
 
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    template_name = 'signup.html'
+    success_url = reverse_lazy('login')

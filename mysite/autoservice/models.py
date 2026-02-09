@@ -81,3 +81,15 @@ class OrderLine(models.Model):
 
     def __str__(self):
         return f"{self.service.name} ({self.service.price}) * {self.quantity} = {self.line_sum()}"
+
+class OrderReview(models.Model):
+    order = models.ForeignKey(to="Order", on_delete=models.SET_NULL,
+                              null=True, blank=True,
+                              related_name="reviews")
+    reviewer= models.ForeignKey(to=User, on_delete=models.SET_NULL,
+                                null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+
+    class Meta:
+        ordering = ['-date_created']

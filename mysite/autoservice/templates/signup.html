@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Registracija{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Registracija</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form method="post">
+                {% csrf_token %}
+                {% load crispy_forms_tags %}
+                {{ form | crispy }}
+                <button type="submit" class="btn btn-primary w-100">Registruotis</button>
+            </form>
+            <p><a href="{% url 'login' %}" class="btn btn-link w-100">Jau užsiregistravote? Prisijunkite</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
