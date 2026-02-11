@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, reverse
 from django.views.generic.edit import FormMixin
 from .models import Service, Order, Car, CustomUser
@@ -7,7 +8,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
-from .forms import OrderReviewForm, CustomUserCreateForm
+from .forms import OrderReviewForm, CustomUserCreateForm, OrderCreateUpdateForm
 
 
 
@@ -105,3 +106,39 @@ class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class MyOrderCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Order
+    template_name = 'order_form.html'
+    form_class = OrderCreateUpdateForm
+    # success_url = reverse_lazy('orders')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('order', kwargs={"pk": self.object.id})
+
+class MyOrderUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Order
+    template_name = 'order_form.html'
+    form_class = OrderCreateUpdateForm
+
+    def test_func(self):
+        return self.get_object().user == self.request.user
+
+    def get_success_url(self):
+        return reverse("order", kwargs={"pk": self.object.id})
+
+class MyOrderDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Order
+    template_name = 'order_delete.html'
+    context_object_name = 'order'
+    success_url = reverse_lazy('myorders')
+
+    def test_func(self):
+        return self.get_object().user == self.request.user
+

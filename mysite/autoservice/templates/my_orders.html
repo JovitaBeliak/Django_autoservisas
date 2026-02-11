@@ -3,10 +3,12 @@
 {% block title %}Mano taisymai{% endblock %}
 
 {% block content %}
+<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'order_create' %}">Naujas taisymas</a>
 <h1>Mano taisymai/paslaugos:</h1>
 {% for order in orders %}
 <p><a href="{% url 'order' order.pk %}">{{ order }}</a></p>
 <p>Užsakymo statusas: {{ order.get_status_display }}</p>
 <p class="{% if order.is_overdue %}text-danger{% endif %}">Terminas: {{ order.due_date }}</p>
+<hr>
 {% endfor %}
 {% endblock %}

@@ -3,10 +3,16 @@
 {% block title %}Užsakymas{% endblock %}
 
 {% block content %}
+<div>
+    <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'order_update' order.pk %}">Redaguoti</a>
+    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'order_delete' order.pk %}">Ištrinti</a>
+</div>
 <p>Data: {{ order.date }}</p>
 <p>Automobilis: {{ order.car }}</p>
 <p>Valstybinis Nr.: {{ order.car.license_plate }}</p>
 <p>Užsakymo statusas: {{ order.get_status_display }}</p>
+<p>Terminas: {{ order.due_date }}</p>
+<p>Klientas: {{ order.client }}</p>
 <h3>Užsakymo informacija</h3>
 <table class="table table-hover">
     <thead>
